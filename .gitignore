@@ -1,0 +1,14 @@
+# filter python byte code & other python generate file
+*.pyc
+.Python
+# filter vim editor
+*.swp
+# filter virtual env
+bin/
+include/
+lib/
+man/
+# filter os file
+.DS_Store
+._.*
+Thumbs.db
