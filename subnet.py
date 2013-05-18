@@ -9,6 +9,10 @@ class MyIPAddress(object):
     def words(self):
         return self._ip
 
+    @property
+    def binary_words(self):
+        return tuple([bin(decimal_addr) for decimal_addr in self._ip])
+
     def _tuple_from(self, ip):
         # matching pattern 11111111.11111111.11111111.11111111
         if re.match(r'^[0-1]{8}.[0-1]{8}.[0-1]{8}.[0-1]{8}$', ip):
@@ -23,6 +27,12 @@ class MyIPAddress(object):
 
             return self._tuple_from(binary_addr)
 
+    def __and__(self, other):
+        result = []
+        for i in range(4):
+            result.append(str(int(self.binary_words[i], 2) & int(other.binary_words[i], 2)))
+        return MyIPAddress(".".join(result))
+
     def __str__(self):
         return ".".join([str(word) for word in self._ip])
 
@@ -32,6 +42,10 @@ class MyIPNetwork(object):
         # matching pattern 255.255.255.255/32
         if re.match(r'^(\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3})/\d{1,2}', ip_network):
             self._addr, self._netmask = [MyIPAddress(ip) for ip in ip_network.split('/')]
+        else:
+            self._addr, self._netmask = [MyIPAddress(ip) for ip in (ip_network, '255.255.255.255')]
+
+        self._network = self._addr & self._netmask
 
     @property
     def addr(self):
@@ -40,3 +54,7 @@ class MyIPNetwork(object):
     @property
     def netmask(self):
         return self._netmask
+
+    @property
+    def network(self):
+        return self._network
