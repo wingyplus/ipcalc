@@ -51,6 +51,9 @@ class MyIPAddress(object):
             result.append(str(int(self.binary_words[i], 2) | int(other.binary_words[i], 2)))
         return MyIPAddress(".".join(result))
 
+    def __invert__(self):
+        return MyIPAddress(".".join([str(int(binary_word, 2) ^ int('0b11111111', 2)) for binary_word in self.binary_words]))
+
     def __str__(self):
         return ".".join([str(word) for word in self._ip])
 
@@ -63,8 +66,9 @@ class MyIPNetwork(object):
         else:
             self._addr, self._netmask = [MyIPAddress(ip) for ip in (ip_network, '255.255.255.255')]
 
+        self._wildcard = ~self._netmask
         self._network = self._addr & self._netmask
-        self._broadcast = self._addr | MyIPAddress('0.0.0.255')
+        self._broadcast = self._addr | self._wildcard
 
     @property
     def addr(self):

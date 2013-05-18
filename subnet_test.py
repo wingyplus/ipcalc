@@ -51,6 +51,14 @@ def test_or_operator():
     ok_(isinstance(result, MyIPAddress))
     eq_(str(result), '192.168.1.255')
 
+def test_invert_operator():
+    ip1 = MyIPAddress('24')
+
+    result = ~ip1
+
+    ok_(isinstance(result, MyIPAddress))
+    eq_(str(result), '0.0.0.255')
+
 def test_ip_network():
     ip = MyIPNetwork('192.168.5.0/26')
 
@@ -75,3 +83,8 @@ def test_ip_broadcast():
 
     ok_(isinstance(ip.broadcast, MyIPAddress))
     eq_(str(ip.broadcast), '192.168.0.255')
+
+def test_broadcast_for_c_network_class():
+    ip = MyIPNetwork('192.168.0.1/25')
+
+    eq_(str(ip.broadcast), '192.168.0.127')
