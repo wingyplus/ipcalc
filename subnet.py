@@ -33,6 +33,12 @@ class MyIPAddress(object):
             result.append(str(int(self.binary_words[i], 2) & int(other.binary_words[i], 2)))
         return MyIPAddress(".".join(result))
 
+    def __or__(self, other):
+        result = []
+        for i in range(4):
+            result.append(str(int(self.binary_words[i], 2) | int(other.binary_words[i], 2)))
+        return MyIPAddress(".".join(result))
+
     def __str__(self):
         return ".".join([str(word) for word in self._ip])
 
@@ -46,6 +52,7 @@ class MyIPNetwork(object):
             self._addr, self._netmask = [MyIPAddress(ip) for ip in (ip_network, '255.255.255.255')]
 
         self._network = self._addr & self._netmask
+        self._broadcast = self._addr | MyIPAddress('0.0.0.255')
 
     @property
     def addr(self):
@@ -58,3 +65,7 @@ class MyIPNetwork(object):
     @property
     def network(self):
         return self._network
+
+    @property
+    def broadcast(self):
+        return self._broadcast

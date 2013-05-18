@@ -42,6 +42,15 @@ def test_and_operator():
     ok_(isinstance(result, MyIPAddress))
     eq_(str(result), '192.168.1.0')
 
+def test_or_operator():
+    ip1 = MyIPAddress('192.168.1.1')
+    ip2 = MyIPAddress('0.0.0.255')
+
+    result = ip1 | ip2
+
+    ok_(isinstance(result, MyIPAddress))
+    eq_(str(result), '192.168.1.255')
+
 def test_ip_network():
     ip = MyIPNetwork('192.168.5.0/26')
 
@@ -60,3 +69,9 @@ def test_ip_network_prefix():
 
     ok_(isinstance(ip.network, MyIPAddress))
     eq_(str(ip.network), '192.168.5.0')
+
+def test_ip_broadcast():
+    ip = MyIPNetwork('192.168.0.1/24')
+
+    ok_(isinstance(ip.broadcast, MyIPAddress))
+    eq_(str(ip.broadcast), '192.168.0.255')
