@@ -7,10 +7,16 @@ class MyIPAddress(object):
 
     @property
     def words(self):
+        '''
+        return tuple of decimal ip
+        '''
         return self._ip
 
     @property
     def binary_words(self):
+        '''
+        return tuple of binary ip
+        '''
         return tuple([bin(decimal_addr) for decimal_addr in self._ip])
 
     def _tuple_from(self, ip):
@@ -28,12 +34,18 @@ class MyIPAddress(object):
             return self._tuple_from(binary_addr)
 
     def __and__(self, other):
+        '''
+        return MyIPAddress object result from calculate and bit
+        '''
         result = []
         for i in range(4):
             result.append(str(int(self.binary_words[i], 2) & int(other.binary_words[i], 2)))
         return MyIPAddress(".".join(result))
 
     def __or__(self, other):
+        '''
+        return MyIPAddress object result from calculate or bit
+        '''
         result = []
         for i in range(4):
             result.append(str(int(self.binary_words[i], 2) | int(other.binary_words[i], 2)))
